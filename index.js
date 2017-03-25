@@ -40,12 +40,12 @@ function getAddress (d, compressed) {
   return bs58check.encode(payload)
 }
 
-function encryptRaw (buffer, compressed, passphrase, progressCallback, scryptParams) {
+function encryptRaw (buffer, compressed, passphrase, address, progressCallback, scryptParams) { 
   if (buffer.length !== 32) throw new Error('Invalid private key length')
   scryptParams = scryptParams || SCRYPT_PARAMS
 
   var d = BigInteger.fromBuffer(buffer)
-  var address = getAddress(d, compressed)
+  var address = address || getAddress(d, compressed)
   var secret = new Buffer(passphrase, 'utf8')
   var salt = hash256(address).slice(0, 4)
 
@@ -154,7 +154,8 @@ function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
     ownerSalt = ownerEntropy
   }
 
-  var encryptedPart1 = buffer.slice(14, 22) // First 8 bytes
+  var 
+  edPart1 = buffer.slice(14, 22) // First 8 bytes
   var encryptedPart2 = buffer.slice(22, 38) // 16 bytes
 
   var N = scryptParams.N
